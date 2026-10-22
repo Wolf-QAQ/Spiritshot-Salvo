@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://du22ja3kqnnsk"]
+
+[ext_resource type="Texture2D" uid="uid://d378bpwv8vxk" path="res://assets/white_circle.png" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://c1c1axjrpckgp" path="res://scripts/player.gd" id="1_g2els"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
+radius = 49.010204
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3jfgk"]
+radius = 38.052597
+
+[node name="Player" type="CharacterBody2D" unique_id=1262315287]
+script = ExtResource("1_g2els")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1990007431]
+texture = ExtResource("1_3vyb7")
+
+[node name="PlayerCollisionShape" type="CollisionShape2D" parent="." unique_id=653239418]
+shape = SubResource("CircleShape2D_g2els")
+
+[node name="PlayerDamagedShape" type="CollisionShape2D" parent="." unique_id=331554314]
+shape = SubResource("CircleShape2D_3jfgk")
+debug_color = Color(0.9957246, 0, 0.20829695, 0.41960785)

@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dhjuqu86o488h"]
+
+[ext_resource type="Script" uid="uid://b8rfn6kup57ww" path="res://scripts/player_bullet.gd" id="1_0cue5"]
+[ext_resource type="Shader" uid="uid://c6oedgx6phatr" path="res://data/shaders/test_bullet_color.gdshader" id="1_46jqs"]
+[ext_resource type="Texture2D" uid="uid://d378bpwv8vxk" path="res://assets/white_circle.png" id="2_0cue5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g2els"]
+shader = ExtResource("1_46jqs")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_46jqs"]
+radius = 44.011364
+
+[node name="PlayerBullet" type="Area2D" unique_id=313940525]
+script = ExtResource("1_0cue5")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=324216584]
+material = SubResource("ShaderMaterial_g2els")
+texture = ExtResource("2_0cue5")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="." unique_id=1465592173]
+shape = SubResource("CircleShape2D_46jqs")
+
+[node name="VisibleOnScreenNotifier" type="VisibleOnScreenNotifier2D" parent="." unique_id=15278009]
+rect = Rect2(-50, -50, 100, 100)
