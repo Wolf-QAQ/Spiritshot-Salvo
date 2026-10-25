@@ -11,12 +11,10 @@ var direction: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	self.scale = Vector2(0.25, 0.25)
+	visible_on_screen_notifier.screen_exited.connect(queue_free)
 
 
 func _physics_process(delta: float) -> void:
-	if not visible_on_screen_notifier.is_on_screen():
-		queue_free()
-	
 	var current_position = global_position
 	var next_position = current_position + direction * speed * delta
 	

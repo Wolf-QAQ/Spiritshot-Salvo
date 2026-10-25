@@ -72,9 +72,12 @@ func spawn_bullet() -> void:
 	# 根据射击模式配置射击方向
 	if current_shoot_mode == DEFAULT_SHOOT_MODE: # 鼠标指示方向射击模式
 		var to_mouse_direction = (get_global_mouse_position() - global_position).normalized()
-		# 鼠标在角色下方, 将方向反转
+		# 鼠标在角色下方, 将 y 方向反转并轻微反弹
+		# 鼠标在角色下方, 若与 y 轴夹角小于60°, 反转 x 分量方向
 		if to_mouse_direction.y > 0:
-			to_mouse_direction = -to_mouse_direction
+			to_mouse_direction.y = -to_mouse_direction.y / 2.0
+			if to_mouse_direction.x < 0.86 and to_mouse_direction.x > -0.86:
+				to_mouse_direction.x = -to_mouse_direction.x
 		direction = to_mouse_direction
 	bullet.setup(direction)
 	
