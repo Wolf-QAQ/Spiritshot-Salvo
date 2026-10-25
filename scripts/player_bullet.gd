@@ -8,6 +8,7 @@ class_name Bullet
 # 当前移动方向
 var direction: Vector2 = Vector2.ZERO
 
+
 func _ready() -> void:
 	self.scale = Vector2(0.25, 0.25)
 
@@ -29,8 +30,3 @@ func setup(init_direction: Vector2) -> void:
 		direction = init_direction.normalized()
 	# 设置偏转角度
 	rotation = direction.angle()
-
-
-func _on_invisible_on_screen() -> void:
-	queue_free()
-	return

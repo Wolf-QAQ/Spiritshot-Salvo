@@ -2,15 +2,22 @@ extends CharacterBody2D
 
 const PLAYER_BULLET_SCENE = preload("res://scenes/player_bullet.tscn")
 
+# 默认玩家移动速度
+var DEFAULT_PLAYER_MOVE_SPEED: float = 500.0
 # 最大射弹射出间隔/s
 const MAX_SHOOT_INTERVAL: float = 0.2
 # 射弹射出距离玩家的偏移量/pix
 const SHOOTOUT_OFFSET: float = 20.0
+# 默认射击模式
+const DEFAULT_SHOOT_MODE: int = 0
 
-# 玩家速度/pix
-@export var player_move_speed: float = 500.0
+
+# 当前玩家速度/pix (默认为 DEFAULT_PLAYER_MOVE_SPEED)
+@export var current_player_move_speed: float = DEFAULT_PLAYER_MOVE_SPEED
 # 当前射弹射出剩余间隔/s
-var shoot_interval: float = 2.0
+var current_shoot_interval: float = 2.0
+# 当前射击模式 (默认为 DEFAULT_SHOOT_MODE)
+var current_shoot_mode: int = DEFAULT_SHOOT_MODE
 
 
 func _ready() -> void:
@@ -21,7 +28,7 @@ func _ready() -> void:
 	self.scale = Vector2(0.5, 0.5)
 	self.position = Vector2(_window_width / 2.0, _window_height / 4.0 * 3.0)
 	# 设置初始变量
-	shoot_interval = MAX_SHOOT_INTERVAL
+	current_shoot_interval = MAX_SHOOT_INTERVAL
 
 
 func _physics_process(delta: float) -> void:
@@ -32,26 +39,26 @@ func _physics_process(delta: float) -> void:
 
 	
 	# 获取输入方向并归一化
-	var move_direct: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down").normalized()
+	var move_direct: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	# 调用 velocity 并移动
-	velocity = move_direct * player_move_speed
+	velocity = move_direct * current_player_move_speed
 	move_and_slide()
 
 
-# 每个逻辑刻减少射击冷却时间的函数
-func _reduce_shoot_interval(delta: float) -> void:
-	shoot_interval -= delta
+# 减少射击冷却时间的函数
+func _reduce_shoot_interval(amount: float) -> void:
+	current_shoot_interval -= amount
 
 
 # 尝试射出射弹, 尝试成功生成一个普通射弹, 重置射击间隔
 # 当前射击间隔不可改变
 # 短路写法
 func _try_shoot() -> void:
-	if shoot_interval > 0.0:
+	if current_shoot_interval > 0.0:
 		return
 	
-	shoot_interval = MAX_SHOOT_INTERVAL
 	spawn_bullet()
+	current_shoot_interval = MAX_SHOOT_INTERVAL
 
 
 # 生成一个射弹
@@ -60,14 +67,25 @@ func spawn_bullet() -> void:
 	if bullet == null:
 		return
 	
-	bullet.setup(Vector2(0, -1))
+	# 传入射弹方向
+	var direction: Vector2
+	# 根据射击模式配置射击方向
+	if current_shoot_mode == DEFAULT_SHOOT_MODE: # 鼠标指示方向射击模式
+		var to_mouse_direction = (get_global_mouse_position() - global_position).normalized()
+		# 鼠标在角色下方, 将方向反转
+		if to_mouse_direction.y > 0:
+			to_mouse_direction = -to_mouse_direction
+		direction = to_mouse_direction
+	bullet.setup(direction)
+	
 	# 设置父节点为场景, 避免射弹跟随玩家
 	var parent := get_tree().current_scene
 	if parent == null:
+		bullet.queue_free()
 		return
 	
 	parent.add_child(bullet)
-	bullet.global_position = global_position + Vector2(0, -1) * SHOOTOUT_OFFSET
+	bullet.global_position = global_position + direction * SHOOTOUT_OFFSET
 
 
 # 获取当前屏幕大小 (Vec2)
