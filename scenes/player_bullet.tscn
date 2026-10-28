@@ -11,6 +11,7 @@ shader = ExtResource("1_46jqs")
 radius = 44.011364
 
 [node name="PlayerBullet" type="Area2D" unique_id=313940525]
+collision_layer = 4
 script = ExtResource("1_0cue5")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=324216584]

@@ -3,7 +3,7 @@ extends CharacterBody2D
 const PLAYER_BULLET_SCENE = preload("res://scenes/player_bullet.tscn")
 
 # 默认玩家移动速度
-var DEFAULT_PLAYER_MOVE_SPEED: float = 500.0
+const DEFAULT_PLAYER_MOVE_SPEED: float = 500.0
 # 最大射弹射出间隔/s
 const MAX_SHOOT_INTERVAL: float = 0.2
 # 射弹射出距离玩家的偏移量/pix
@@ -15,7 +15,7 @@ const DEFAULT_SHOOT_MODE: int = 0
 # 当前玩家速度/pix (默认为 DEFAULT_PLAYER_MOVE_SPEED)
 @export var current_player_move_speed: float = DEFAULT_PLAYER_MOVE_SPEED
 # 当前射弹射出剩余间隔/s
-var current_shoot_interval: float = 2.0
+var current_shoot_interval: float
 # 当前射击模式 (默认为 DEFAULT_SHOOT_MODE)
 var current_shoot_mode: int = DEFAULT_SHOOT_MODE
 
