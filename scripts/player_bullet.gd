@@ -9,8 +9,9 @@ const WORLD_COLLISION_MASK: int = 1
 # 射弹速度/pix
 @export var speed: float = 400.0
 # 生命周期/s
-# 未完成
-@export var life_time: float = 999.0
+@export var _life_time: float = 999.0
+# 每帧碰撞检测次数, 用于处理角落碰撞情况
+@export var _hit_time: int = 4
 # 当前移动方向
 var direction: Vector2 = Vector2.ZERO
 
@@ -32,16 +33,23 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# 生命周期扣除 & 检测
+	_life_time -= delta
+	if _life_time <= 0.0:
+		queue_free()
+	
 	var current_position = global_position
 	var next_position = current_position + direction * speed * delta
 	
 	# 射弹碰到世界层检测 & 改变方向 & 重设 next_position
-	var hit_dic: Dictionary = _hit_world(current_position, next_position)
-	if not hit_dic.is_empty():
-		var normal: Vector2 = hit_dic.normal
-		direction = direction.bounce(normal)
-		next_position = current_position + direction * speed * delta
-	
+	# 重复 _hit_time 次, 处理边缘情况
+	for i in range(_hit_time):
+		var hit_dic: Dictionary = _hit_world(current_position, next_position)
+		if not hit_dic.is_empty():
+			var normal: Vector2 = hit_dic.normal
+			direction = direction.bounce(normal)
+			next_position = current_position + direction * speed * delta
+		
 	global_position = next_position
 
 
